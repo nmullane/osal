@@ -1,5 +1,5 @@
 name: "Build OSAL Documentation (API Guide)"
-
+#empty commit
 on:
   push:
   pull_request:
