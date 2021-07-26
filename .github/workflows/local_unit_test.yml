@@ -34,8 +34,14 @@ jobs:
 
       - name: Confirm 100% line coverage
         run: |
-          if [[ `grep -A 3 "Overall coverage rate" lcov_out.txt | grep lines` != *"100.0%"* ]]; then
+          missed_branches=4
+          numbers=$(grep -A 3 "Overall coverage rate" lcov_out.txt | grep branches | grep -oP "[1-9]+[0-9]*")
+          echo $numbers
+
+          diff=$(echo $numbers | awk '{ print $4 - $3 }')
+          if [ $(($diff > $missed_branches)) == 1 ]
+          then 
             grep -A 3 "Overall coverage rate" lcov_out.txt
-            echo "Lacks 100.0% line unit test coverage"
+            echo "More than $missed_branches branches missed"
             exit -1
           fi
