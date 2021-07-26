@@ -32,13 +32,12 @@ jobs:
       - name: Calculate coverage 
         run: make lcov | tee lcov_out.txt
 
-      - name: Confirm 100% line coverage
+      - name: Confirm absolute line coverage
         run: |
           missed_branches=4
-          numbers=$(grep -A 3 "Overall coverage rate" lcov_out.txt | grep branches | grep -oP "[1-9]+[0-9]*")
-          echo $numbers
+          coverage_nums=$(grep -A 3 "Overall coverage rate" lcov_out.txt | grep branches | grep -oP "[1-9]+[0-9]*")
 
-          diff=$(echo $numbers | awk '{ print $4 - $3 }')
+          diff=$(echo $coverage_nums | awk '{ print $4 - $3 }')
           if [ $(($diff > $missed_branches)) == 1 ]
           then 
             grep -A 3 "Overall coverage rate" lcov_out.txt
